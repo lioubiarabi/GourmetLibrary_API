@@ -3,10 +3,5 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');*/
-
-Route::get('/', function (){
-    return 'Hello';
-});
+Route::apiResource('users', \App\Http\Controllers\UserController::class);
+Route::apiResource('books', \App\Http\Controllers\BookController::class);
