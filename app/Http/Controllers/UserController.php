@@ -21,9 +21,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|min:3|max:30',
-            'email'    => 'required|email|unique:users,email',
-            'phone'    => 'required|string|regex:/^\+212[67][0-9]{8}$/',
+            'name' => 'required|string|min:3|max:30',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|regex:/^\+212[67][0-9]{8}$/',
             'password' => 'required|string|min:8|max:220'
         ]);
 
@@ -31,25 +31,16 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'User created with success!',
-            'user'    => $user
+            'user' => $user
         ], 201);
     }
-
 
     /**
      * Display the specified resource.
      */
     public function show(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
+        return response()->json($user);
     }
 
     /**
@@ -57,7 +48,19 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|min:3|max:30',
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'phone' => 'sometimes|required|string|regex:/^\+212[67][0-9]{8}$/',
+            'password' => 'sometimes|required|string|min:8|max:220'
+        ]);
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => "User ID {$user->id} ({$user->name}) updated successfully!",
+            'user' => $user
+        ], 200);
     }
 
     /**
