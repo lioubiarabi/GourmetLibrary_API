@@ -17,20 +17,29 @@ class BookController extends Controller
 
         if ($request->has('search')) {
             $searchTerm = '%' . $request->search . '%';
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', $searchTerm)
                     ->orWhere('author', 'like', $searchTerm);
             });
         }
 
         if ($request->has('sort')) {
-            if($request->sort === 'popular') {
+            if ($request->sort === 'popular') {
                 $query->withCount('borrowings')->orderByDesc('borrowings_count');
             }
         }
 
         return response()->json([
             'books' => $query->get()
+        ], 200);
+    }
+
+    public function getByCategory($id)
+    {
+        $books = Book::with('category')->where('category_id', $id)->get();
+
+        return response()->json([
+            "books" => $books
         ], 200);
     }
 
