@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class BookController extends Controller
+class BookController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [new Middleware('admin', except: ['index','getByCategory','show'])];
+    }
+
     /**
      * Display a listing of the resource.
      */
